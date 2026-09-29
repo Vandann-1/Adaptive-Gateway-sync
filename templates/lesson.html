@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Viewer — Adaptive Edge Cache & Offline Gateway</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <a href="/" class="nav-brand">
+            <span>Adaptive Gateway</span>
+            <span class="brand-badge">EDGE v1.0</span>
+        </a>
+        <nav class="nav-links">
+            <a href="/">Learning Hub</a>
+            <a href="/offline">Offline Lessons</a>
+            <a href="/dashboard">Dashboard</a>
+        </nav>
+        <div class="nav-controls">
+            <span id="nav-status-pill" class="status-pill online">🟢 Online</span>
+            <span id="nav-sync-badge" class="sync-badge empty">Pending Sync: 0</span>
+            <button id="btn-toggle-demo" class="btn btn-outline btn-sm">⚡ Simulate Offline Mode</button>
+        </div>
+    </header>
+
+    <!-- System Status Bar -->
+    <div class="system-status-bar">
+        <div class="status-items">
+            <div class="status-item">Internet: <strong id="sys-status-internet">🟢 Online</strong></div>
+            <div class="status-item">Server: <strong id="sys-status-server">🟢 Connected</strong></div>
+            <div class="status-item">Cache: <strong id="sys-status-cache">🟢 Active</strong></div>
+            <div class="status-item">Offline Queue: <strong id="sys-status-queue">0</strong></div>
+        </div>
+        <div style="font-size: 0.8rem; color: #64748b;">
+            <a href="/" style="color: #2563eb; text-decoration: none;">&larr; Back to Learning Hub</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Cache Hit / Miss / Offline Banner (Modules 4 & 7) -->
+        <div id="cache-banner" class="cache-source-banner miss">
+            <span>Checking cache status...</span>
+        </div>
+
+        <div class="lesson-container">
+            <!-- Meta Bar -->
+            <div class="lesson-meta-bar">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span id="lesson-category" class="badge-category">Category</span>
+                    <span id="lesson-status-badge" class="badge-status status-not_started">NOT STARTED</span>
+                    <span style="font-size: 0.85rem; color: #64748b;">
+                        Total Accesses: <strong id="lesson-access-count">0</strong>
+                    </span>
+                </div>
+                <div>
+                    <button id="btn-save-offline" class="btn btn-primary btn-sm">📥 Save for Offline</button>
+                </div>
+            </div>
+
+            <!-- Title & Content -->
+            <h1 id="lesson-title" style="font-size: 2rem; margin-bottom: 1rem; color: #0f172a;">Loading Lesson...</h1>
+            <div id="lesson-content" class="lesson-content">
+                Loading lesson materials from gateway...
+            </div>
+
+            <!-- Student Actions (Module 11) -->
+            <div class="lesson-actions">
+                <button id="btn-mark-complete" class="btn btn-success">✓ Mark as Completed</button>
+                <button id="btn-mark-progress" class="btn btn-secondary">In Progress</button>
+                <a href="/" class="btn btn-outline">&larr; Return to Learning Hub</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Adaptive Edge Cache and Offline Learning Content Synchronization Gateway &bull; Prototype for Student Education</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/offline.js"></script>
+    <script src="/static/js/sync.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const lessonId = {{ lesson_id }};
+            initLessonViewer(lessonId);
+        });
+    </script>
+</body>
+</html>

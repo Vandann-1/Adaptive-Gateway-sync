@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cache & Synchronization Dashboard — Adaptive Gateway</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <a href="/" class="nav-brand">
+            <span>Adaptive Gateway</span>
+            <span class="brand-badge">EDGE v1.0</span>
+        </a>
+        <nav class="nav-links">
+            <a href="/">Learning Hub</a>
+            <a href="/offline">Offline Lessons</a>
+            <a href="/dashboard" class="active">Dashboard</a>
+        </nav>
+        <div class="nav-controls">
+            <span id="nav-status-pill" class="status-pill online">🟢 Online</span>
+            <span id="nav-sync-badge" class="sync-badge empty">Pending Sync: 0</span>
+            <button id="btn-toggle-demo" class="btn btn-outline btn-sm">⚡ Simulate Offline Mode</button>
+        </div>
+    </header>
+
+    <!-- System Status Bar -->
+    <div class="system-status-bar">
+        <div class="status-items">
+            <div class="status-item">Internet: <strong id="sys-status-internet">🟢 Online</strong></div>
+            <div class="status-item">Server: <strong id="sys-status-server">🟢 Connected</strong></div>
+            <div class="status-item">Cache: <strong id="sys-status-cache">🟢 Active</strong></div>
+            <div class="status-item">Offline Queue: <strong id="sys-status-queue">0</strong></div>
+        </div>
+        <div>
+            <button onclick="handleClearCache()" class="btn btn-outline btn-sm" style="color: #ef4444; border-color: #fca5a5;">🗑️ Reset Memory Cache</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="container">
+        <div class="page-header">
+            <h1>Cache &amp; Synchronization Dashboard</h1>
+            <p>Live metrics and synchronization status for the adaptive edge cache and offline client queue.</p>
+        </div>
+
+        <!-- Metrics Grid (Module 6 & Module 16) -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-title">Cache Hits</div>
+                <div id="stat-hits" class="metric-value" style="color: #10b981;">0</div>
+                <div class="metric-subtitle">Fast delivery from memory</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-title">Cache Misses</div>
+                <div id="stat-misses" class="metric-value" style="color: #3b82f6;">0</div>
+                <div class="metric-subtitle">Retrieved from SQLite database</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-title">Hit Rate</div>
+                <div id="stat-hit-rate" class="metric-value">0%</div>
+                <div class="progress-container">
+                    <div id="stat-hit-rate-bar" class="progress-bar" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-title">Cache Capacity</div>
+                <div id="stat-capacity" class="metric-value">0 / 5</div>
+                <div class="progress-container">
+                    <div id="stat-capacity-bar" class="progress-bar" style="width: 0%; background-color: #6366f1;"></div>
+                </div>
+                <div class="metric-subtitle">Adaptive LFU eviction policy</div>
+            </div>
+        </div>
+
+        <!-- Section 1: Server Edge Memory Cache -->
+        <div class="dashboard-section">
+            <div class="dashboard-section-header">
+                <div>
+                    <h2 style="font-size: 1.25rem;">Server Edge Memory Cache</h2>
+                    <p style="font-size: 0.85rem; color: #64748b;">
+                        Lessons currently retained in fast memory. Popular lessons with higher access counts stay cached longer.
+                    </p>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">Rank</th>
+                            <th>Lesson Title</th>
+                            <th>Category</th>
+                            <th>Popularity (Access Count)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cached-lessons-tbody">
+                        <tr><td colspan="4" style="text-align: center; color: #94a3b8; padding: 2rem;">Loading cache state...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 2: Browser Offline Content & Pending Queue -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <!-- Offline Content Saved in Browser -->
+            <div class="dashboard-section" style="margin-bottom: 0;">
+                <div class="dashboard-section-header">
+                    <div>
+                        <h2 style="font-size: 1.15rem;">Browser Offline Content</h2>
+                        <p style="font-size: 0.8rem; color: #64748b;">Saved in LocalStorage &amp; Cache API for offline learning.</p>
+                    </div>
+                    <a href="/offline" class="btn btn-outline btn-sm">Manage</a>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Saved Lesson</th>
+                                <th>Category</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offline-items-tbody">
+                            <tr><td colspan="3" style="text-align: center; color: #94a3b8;">Loading offline lessons...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Offline Activity Queue (Pending Sync) -->
+            <div class="dashboard-section" style="margin-bottom: 0;">
+                <div class="dashboard-section-header">
+                    <div>
+                        <h2 style="font-size: 1.15rem;">Pending Synchronization</h2>
+                        <p style="font-size: 0.8rem; color: #64748b;">Student actions performed offline waiting for gateway sync.</p>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="SyncManager.syncPendingActions()">Sync Now</button>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Target</th>
+                                <th>Action</th>
+                                <th>Timestamp</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-queue-tbody">
+                            <tr><td colspan="4" style="text-align: center; color: #94a3b8;">Checking offline queue...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Recent Activity Log (Module 16) -->
+        <div class="dashboard-section">
+            <div class="dashboard-section-header">
+                <div>
+                    <h2 style="font-size: 1.25rem;">Recent Activity Stream</h2>
+                    <p style="font-size: 0.85rem; color: #64748b;">
+                        Real-time log of student progress updates and synced offline activities recorded in the SQLite database.
+                    </p>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lesson</th>
+                            <th>Action Type</th>
+                            <th>Server Recorded At</th>
+                            <th>Gateway Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-activity-tbody">
+                        <tr><td colspan="4" style="text-align: center; color: #94a3b8; padding: 2rem;">Loading activities...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Adaptive Edge Cache and Offline Learning Content Synchronization Gateway &bull; Prototype for Student Education</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/offline.js"></script>
+    <script src="/static/js/sync.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardData();
+            // Auto refresh metrics every 10 seconds
+            setInterval(loadDashboardData, 10000);
+        });
+    </script>
+</body>
+</html>

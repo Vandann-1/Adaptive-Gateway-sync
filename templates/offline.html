@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Offline Lessons — Adaptive Edge Cache & Offline Gateway</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <a href="/" class="nav-brand">
+            <span>Adaptive Gateway</span>
+            <span class="brand-badge">EDGE v1.0</span>
+        </a>
+        <nav class="nav-links">
+            <a href="/">Learning Hub</a>
+            <a href="/offline" class="active">Offline Lessons</a>
+            <a href="/dashboard">Dashboard</a>
+        </nav>
+        <div class="nav-controls">
+            <span id="nav-status-pill" class="status-pill online">🟢 Online</span>
+            <span id="nav-sync-badge" class="sync-badge empty">Pending Sync: 0</span>
+            <button id="btn-toggle-demo" class="btn btn-outline btn-sm">⚡ Simulate Offline Mode</button>
+        </div>
+    </header>
+
+    <!-- System Status Bar -->
+    <div class="system-status-bar">
+        <div class="status-items">
+            <div class="status-item">Internet: <strong id="sys-status-internet">🟢 Online</strong></div>
+            <div class="status-item">Server: <strong id="sys-status-server">🟢 Connected</strong></div>
+            <div class="status-item">Cache: <strong id="sys-status-cache">🟢 Active</strong></div>
+            <div class="status-item">Offline Queue: <strong id="sys-status-queue">0</strong></div>
+        </div>
+        <div style="font-size: 0.8rem; color: #64748b;" id="offline-count-label">
+            Checking offline storage...
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="container">
+        <div class="page-header">
+            <h1>My Offline Lessons</h1>
+            <p>These lessons are saved locally in your browser (LocalStorage and Cache API). You can access and complete them anytime without an active internet connection.</p>
+        </div>
+
+        <!-- Offline Lessons Grid -->
+        <div id="offline-lessons-grid" class="cards-grid">
+            <!-- Rendered dynamically by app.js -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Adaptive Edge Cache and Offline Learning Content Synchronization Gateway &bull; Prototype for Student Education</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/offline.js"></script>
+    <script src="/static/js/sync.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initOfflinePage();
+        });
+    </script>
+</body>
+</html>

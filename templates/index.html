@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Hub — Adaptive Edge Cache & Offline Gateway</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <a href="/" class="nav-brand">
+            <span>Adaptive Gateway</span>
+            <span class="brand-badge">EDGE v1.0</span>
+        </a>
+        <nav class="nav-links">
+            <a href="/" class="active">Learning Hub</a>
+            <a href="/offline">Offline Lessons</a>
+            <a href="/dashboard">Dashboard</a>
+        </nav>
+        <div class="nav-controls">
+            <span id="nav-status-pill" class="status-pill online">🟢 Online</span>
+            <span id="nav-sync-badge" class="sync-badge empty">Pending Sync: 0</span>
+            <button id="btn-toggle-demo" class="btn btn-outline btn-sm">⚡ Simulate Offline Mode</button>
+        </div>
+    </header>
+
+    <!-- System Status Bar (Module 13) -->
+    <div class="system-status-bar">
+        <div class="status-items">
+            <div class="status-item">Internet: <strong id="sys-status-internet">🟢 Online</strong></div>
+            <div class="status-item">Server: <strong id="sys-status-server">🟢 Connected</strong></div>
+            <div class="status-item">Cache: <strong id="sys-status-cache">🟢 Active</strong></div>
+            <div class="status-item">Offline Queue: <strong id="sys-status-queue">0</strong></div>
+        </div>
+        <div style="font-size: 0.8rem; color: #64748b;">
+            Student ID: <strong>Demo Student (#1)</strong>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="container">
+        <div class="page-header">
+            <h1>Learning Hub</h1>
+            <p>Access educational modules powered by an adaptive in-memory edge cache with complete offline synchronization.</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-box">
+            <input type="text" id="search-input" class="search-input" placeholder="🔍 Search lessons by title, topic, or category (e.g., Python, Networks, Database)...">
+            <div style="display: flex; align-items: center; padding: 0 0.5rem; color: #64748b; font-size: 0.85rem;" id="lesson-count-label">
+                Loading lessons...
+            </div>
+        </div>
+
+        <!-- Lessons Cards Grid -->
+        <div id="lessons-grid" class="cards-grid">
+            <!-- Dynamic cards injected via app.js -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Adaptive Edge Cache and Offline Learning Content Synchronization Gateway &bull; Prototype for Student Education</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/offline.js"></script>
+    <script src="/static/js/sync.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initLearningHub();
+        });
+    </script>
+</body>
+</html>
